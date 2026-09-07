@@ -1,12 +1,14 @@
 # Nox Language Support for Visual Studio Code
 
-Minimal syntax highlighting for Nox project and task files.
+Syntax highlighting and live diagnostics for Nox project and task files.
 
 The extension version is defined in `VERSION`. Before packaging locally, synchronize the VS Code manifest:
 
 ```sh
 npm run package
 ```
+
+The extension lints open `nox.build`, `noxfile`, and `nox.state` documents as you edit them. Syntax errors, malformed arrays, missing braces, unknown project or target properties, duplicate targets/tasks, invalid `install` values, and malformed state entries appear in VS Code's Problems panel with source ranges.
 
 Recognized files:
 
