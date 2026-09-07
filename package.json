@@ -2,7 +2,7 @@
   "name": "nox-language-support",
   "displayName": "Nox Language Support",
   "description": "Syntax highlighting for Nox build files and task files.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "nox-build",
   "license": "Unlicense",
   "engines": {
@@ -11,6 +11,10 @@
   "categories": [
     "Programming Languages"
   ],
+  "scripts": {
+    "sync-version": "node scripts/sync-version.mjs",
+    "package": "npm run sync-version && npx --yes @vscode/vsce package --no-dependencies --allow-missing-repository"
+  },
   "contributes": {
     "languages": [
       {

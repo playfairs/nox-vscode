@@ -2,6 +2,12 @@
 
 Minimal syntax highlighting for Nox project and task files.
 
+The extension version is defined in `VERSION`. Before packaging locally, synchronize the VS Code manifest:
+
+```sh
+npm run package
+```
+
 Recognized files:
 
 - `nox.build`

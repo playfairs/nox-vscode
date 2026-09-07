@@ -28,6 +28,9 @@ jobs:
         with:
           node-version: 22
 
+      - name: Synchronize package version
+        run: npm run sync-version
+
       - name: Validate extension files
         shell: bash
         run: |
@@ -47,7 +50,7 @@ jobs:
           NODE
 
       - name: Package VSIX
-        run: npx --yes @vscode/vsce package --no-dependencies --allow-missing-repository
+        run: npm run package
 
       - name: Determine next dev tag
         id: tag
