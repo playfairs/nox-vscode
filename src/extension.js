@@ -12,30 +12,40 @@ function activate(context) {
       diagnostics.set(document.uri, toDiagnostics(document));
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      diagnostics.set(document.uri, [runtimeDiagnostic(document, `Nox linter failed safely: ${message}`)]);
+      diagnostics.set(document.uri, [
+        runtimeDiagnostic(document, `Nox linter failed safely: ${message}`),
+      ]);
     }
   };
 
   context.subscriptions.push(diagnostics);
   context.subscriptions.push(vscode.workspace.onDidOpenTextDocument(lint));
-  context.subscriptions.push(vscode.workspace.onDidChangeTextDocument((event) => lint(event.document)));
-  context.subscriptions.push(vscode.workspace.onDidCloseTextDocument((document) => diagnostics.delete(document.uri)));
+  context.subscriptions.push(
+    vscode.workspace.onDidChangeTextDocument((event) => lint(event.document)),
+  );
+  context.subscriptions.push(
+    vscode.workspace.onDidCloseTextDocument((document) =>
+      diagnostics.delete(document.uri),
+    ),
+  );
   for (const document of vscode.workspace.textDocuments) lint(document);
 }
 
 function toDiagnostics(document) {
   const filename = path.basename(document.uri.fsPath || document.fileName);
-  return lintDocument(document.getText().replace(/^\uFEFF/, ""), filename).map((error) => {
-    const start = document.positionAt(error.start);
-    const end = document.positionAt(Math.max(error.start + 1, error.end));
-    const diagnostic = new vscode.Diagnostic(
-      new vscode.Range(start, end),
-      error.message,
-      error.severity || vscode.DiagnosticSeverity.Error,
-    );
-    diagnostic.source = diagnosticSource;
-    return diagnostic;
-  });
+  return lintDocument(document.getText().replace(/^\uFEFF/, ""), filename).map(
+    (error) => {
+      const start = document.positionAt(error.start);
+      const end = document.positionAt(Math.max(error.start + 1, error.end));
+      const diagnostic = new vscode.Diagnostic(
+        new vscode.Range(start, end),
+        error.message,
+        error.severity || vscode.DiagnosticSeverity.Error,
+      );
+      diagnostic.source = diagnosticSource;
+      return diagnostic;
+    },
+  );
 }
 
 function runtimeDiagnostic(document, message) {

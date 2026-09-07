@@ -15,14 +15,31 @@ function lintNoxfile(text) {
     const indentation = line.length - line.trimStart().length;
     const value = line.trim();
     if (!value || value.startsWith("#")) return;
-    if (value === "tasks:") { tasks = true; return; }
-    if (tasks && indentation <= 2 && !value.endsWith(":")) errors.push(lineError(text, lineIndex, line, "Expected a task name ending with `:`."));
+    if (value === "tasks:") {
+      tasks = true;
+      return;
+    }
+    if (tasks && indentation <= 2 && !value.endsWith(":"))
+      errors.push(
+        lineError(
+          text,
+          lineIndex,
+          line,
+          "Expected a task name ending with `:`.",
+        ),
+      );
     if (tasks && indentation > 0 && value.endsWith(":") && indentation <= 4) {
       const name = value.slice(0, -1).trim();
-      if (taskNames.has(name)) errors.push(lineError(text, lineIndex, line, `Duplicate task \`${name}\`.`));
+      if (taskNames.has(name))
+        errors.push(
+          lineError(text, lineIndex, line, `Duplicate task \`${name}\`.`),
+        );
       taskNames.add(name);
     }
-    if (tasks && value.startsWith("run:") && !value.slice(4).trim()) errors.push(lineError(text, lineIndex, line, "Task run command cannot be empty."));
+    if (tasks && value.startsWith("run:") && !value.slice(4).trim())
+      errors.push(
+        lineError(text, lineIndex, line, "Task run command cannot be empty."),
+      );
   });
   return errors;
 }
@@ -31,13 +48,19 @@ function lintState(text) {
   const errors = [];
   text.split(/\r?\n/).forEach((line, lineIndex) => {
     if (!line.trim()) return;
-    if (!/^[^=\s]+=.*/.test(line)) errors.push(lineError(text, lineIndex, line, "Expected a `key=value` state entry."));
+    if (!/^[^=\s]+=.*/.test(line))
+      errors.push(
+        lineError(text, lineIndex, line, "Expected a `key=value` state entry."),
+      );
   });
   return errors;
 }
 
 function lineError(text, lineIndex, line, message) {
-  const start = text.split(/\r?\n/).slice(0, lineIndex).reduce((total, current) => total + current.length + 1, 0);
+  const start = text
+    .split(/\r?\n/)
+    .slice(0, lineIndex)
+    .reduce((total, current) => total + current.length + 1, 0);
   return { start, end: start + Math.max(1, line.length), message };
 }
 

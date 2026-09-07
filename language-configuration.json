@@ -4,24 +4,12 @@
       "comment": "//",
       "noIndent": false
     },
-    "blockComment": [
-      "/*",
-      "*/"
-    ]
+    "blockComment": ["/*", "*/"]
   },
   "brackets": [
-    [
-      "{",
-      "}"
-    ],
-    [
-      "[",
-      "]"
-    ],
-    [
-      "(",
-      ")"
-    ]
+    ["{", "}"],
+    ["[", "]"],
+    ["(", ")"]
   ],
   "autoClosingPairs": [
     {
@@ -42,22 +30,10 @@
     }
   ],
   "surroundingPairs": [
-    [
-      "{",
-      "}"
-    ],
-    [
-      "[",
-      "]"
-    ],
-    [
-      "(",
-      ")"
-    ],
-    [
-      "\"",
-      "\""
-    ]
+    ["{", "}"],
+    ["[", "]"],
+    ["(", ")"],
+    ["\"", "\""]
   ],
   "indentationRules": {
     "increaseIndentPattern": "^\\s*(project|executable|static_library|shared_library|rust_executable|rust_library)\\b.*\\{\\s*$",
