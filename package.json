@@ -5,6 +5,14 @@
   "version": "0.1.1",
   "publisher": "nox-build",
   "license": "Unlicense",
+  "main": "./extension.js",
+  "activationEvents": [
+    "onStartupFinished",
+    "onLanguage:nox",
+    "workspaceContains:nox.build",
+    "workspaceContains:noxfile",
+    "workspaceContains:nox.state"
+  ],
   "engines": {
     "vscode": "^1.85.0"
   },
