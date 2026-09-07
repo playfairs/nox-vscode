@@ -1,0 +1,97 @@
+{
+  "name": "Nox",
+  "scopeName": "source.nox",
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#properties"
+    },
+    {
+      "include": "#functions"
+    },
+    {
+      "include": "#booleans"
+    },
+    {
+      "include": "#numbers"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.nox",
+          "match": "//.*$"
+        },
+        {
+          "name": "comment.block.nox",
+          "begin": "/\\*",
+          "end": "\\*/"
+        },
+        {
+          "name": "comment.line.number-sign.nox",
+          "match": "#.*$"
+        }
+      ]
+    },
+    "strings": {
+      "name": "string.quoted.double.nox",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.nox",
+          "match": "\\\\."
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.nox",
+          "match": "\\b(project|executable|static_library|static|shared_library|shared|rust_executable|rust_library|task|tasks)\\b"
+        }
+      ]
+    },
+    "properties": {
+      "patterns": [
+        {
+          "name": "variable.other.property.nox",
+          "match": "\\b(version|description|license|edition|dependencies|sources|depends|include_dirs|includes|defines|flags|linker_flags|install|run)\\b(?=\\s*(=|:))"
+        }
+      ]
+    },
+    "functions": {
+      "patterns": [
+        {
+          "name": "support.function.nox",
+          "match": "\\b(file|glob)\\b(?=\\s*\\()"
+        }
+      ]
+    },
+    "booleans": {
+      "patterns": [
+        {
+          "name": "constant.language.boolean.nox",
+          "match": "\\b(true|false)\\b"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.nox",
+          "match": "\\b\\d+(\\.\\d+)?\\b"
+        }
+      ]
+    }
+  }
+}

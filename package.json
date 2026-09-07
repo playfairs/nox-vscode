@@ -1,0 +1,39 @@
+{
+  "name": "nox-language-support",
+  "displayName": "Nox Language Support",
+  "description": "Syntax highlighting for Nox build files and task files.",
+  "version": "0.1.0",
+  "publisher": "nox-build",
+  "license": "Unlicense",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "nox",
+        "aliases": [
+          "Nox",
+          "nox.build",
+          "noxfile"
+        ],
+        "filenames": [
+          "nox.build",
+          "noxfile",
+          "nox.state"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "nox",
+        "scopeName": "source.nox",
+        "path": "./syntaxes/nox.tmLanguage.json"
+      }
+    ]
+  }
+}
