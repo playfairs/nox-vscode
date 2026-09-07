@@ -1,0 +1,49 @@
+name: Nox VS Code Release
+
+on:
+  release:
+    types:
+      - published
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    name: Check and package release VSIX
+    if: github.event.release.target_commitish == 'master'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out release tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
+          fetch-depth: 1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate extension files
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+          const configuration = JSON.parse(fs.readFileSync('language-configuration.json', 'utf8'));
+          const grammar = JSON.parse(fs.readFileSync(packageJson.contributes.grammars[0].path, 'utf8'));
+          if (!packageJson.name || !packageJson.version) throw new Error('package metadata is incomplete');
+          if (!configuration.comments || !grammar.scopeName) throw new Error('language files are incomplete');
+          console.log(`validated ${packageJson.name} ${packageJson.version}`);
+          NODE
+
+      - name: Package VSIX
+        run: npx --yes @vscode/vsce package --no-dependencies --allow-missing-repository
+
+      - name: Upload VSIX artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.event.release.tag_name }}
+          path: '*.vsix'
+          if-no-files-found: error

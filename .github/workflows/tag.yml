@@ -1,0 +1,80 @@
+name: Nox VS Code Dev Tag
+
+on:
+  push:
+    branches:
+      - dev
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nox-vsc-dev-tag
+  cancel-in-progress: false
+
+jobs:
+  tag:
+    name: Check, package, and tag dev build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out dev
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate extension files
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+          const configuration = JSON.parse(fs.readFileSync('language-configuration.json', 'utf8'));
+          const grammar = JSON.parse(fs.readFileSync(packageJson.contributes.grammars[0].path, 'utf8'));
+          if (!packageJson.name || !packageJson.version) throw new Error('package metadata is incomplete');
+          if (!configuration.comments || !grammar.scopeName) throw new Error('language files are incomplete');
+          for (const filename of packageJson.contributes.languages[0].filenames) {
+            if (!fs.existsSync(filename) && filename !== 'nox.build' && filename !== 'noxfile' && filename !== 'nox.state') {
+              throw new Error(`missing recognized filename: ${filename}`);
+            }
+          }
+          console.log(`validated ${packageJson.name} ${packageJson.version}`);
+          NODE
+
+      - name: Package VSIX
+        run: npx --yes @vscode/vsce package --no-dependencies --allow-missing-repository
+
+      - name: Determine next dev tag
+        id: tag
+        shell: bash
+        run: |
+          latest=$(
+            git ls-remote --tags origin 'refs/tags/nox-vsc.dev.*' |
+              sed -n 's#.*refs/tags/nox-vsc\.dev\.\([0-9][0-9]*\)$#\1#p' |
+              sort -n |
+              tail -n 1
+          )
+          latest=${latest:-0}
+          next=$((latest + 1))
+          echo "name=nox-vsc.dev.${next}" >> "$GITHUB_OUTPUT"
+
+      - name: Create dev tag
+        env:
+          TAG_NAME: ${{ steps.tag.outputs.name }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "$TAG_NAME" -m "Nox VS Code dev build $TAG_NAME"
+          git push origin "$TAG_NAME"
+
+      - name: Upload VSIX artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.tag.outputs.name }}
+          path: '*.vsix'
+          if-no-files-found: error
