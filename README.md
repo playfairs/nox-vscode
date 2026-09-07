@@ -18,8 +18,17 @@ Recognized files:
 
 The extension highlights Nox project declarations, targets, properties, strings, comments, booleans, numbers, and native expressions such as `file()` and `glob()`.
 
+The runtime is organized under `src/`: activation lives in `src/extension.js`, document linting in `src/lint/index.js`, and build parsing in `src/lint/build.js`.
+
 ## Development
 
 Open this folder in VS Code and press `F5` to launch an Extension Development Host. Open a `nox.build` or `noxfile` there to inspect the highlighting.
 
 Use `Developer: Inspect Editor Tokens and Scopes` from the Command Palette to inspect grammar scopes.
+
+Run `npm test` to verify build-file linting, including D targets such as `d_executable`.
+
+Run `nox task install` to package the extension, remove the existing
+`playfairs.nox-language-support` installation, and install the new VSIX.
+On macOS, it falls back to launching Visual Studio Code with `open` when the
+`code` command is not on your `PATH`.

@@ -2,10 +2,10 @@
   "name": "nox-language-support",
   "displayName": "Nox Language Support",
   "description": "Syntax highlighting for Nox build files and task files.",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "publisher": "playfairs",
   "license": "Unlicense",
-  "main": "./extension.js",
+  "main": "./src/extension.js",
   "activationEvents": [
     "onStartupFinished",
     "workspaceContains:nox.build",
@@ -19,6 +19,7 @@
     "Programming Languages"
   ],
   "scripts": {
+    "test": "node test/lint.test.js",
     "sync-version": "node scripts/sync-version.mjs",
     "package": "npm run sync-version && npx --yes @vscode/vsce package --no-dependencies --allow-missing-repository"
   },

@@ -1,0 +1,13 @@
+project "nox-language-support" {
+    version = file("./VERSION")
+    description = "Syntax highlighting and live diagnostics for Nox files in Visual Studio Code."
+    license = "Unlicense"
+
+    executable "nox-language-support" {
+        sources = [
+            "src/extension.js",
+            "src/lint/index.js",
+            "src/lint/build.js",
+        ]
+    }
+}

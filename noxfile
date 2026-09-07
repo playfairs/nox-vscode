@@ -1,0 +1,7 @@
+tasks:
+    build:
+        run: npm test
+    format:
+        run: npx --yes prettier --write "**/*.{js,json,md}"
+    package:
+        run: npm run package
