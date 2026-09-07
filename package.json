@@ -2,7 +2,7 @@
   "name": "nox-language-support",
   "displayName": "Nox Language Support",
   "description": "Syntax highlighting for Nox build files and task files.",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "publisher": "nox-build",
   "license": "Unlicense",
   "main": "./extension.js",
