@@ -72,9 +72,13 @@ jobs:
           git tag -a "$TAG_NAME" -m "Nox VS Code dev build $TAG_NAME"
           git push origin "$TAG_NAME"
 
-      - name: Upload VSIX artifact
-        uses: actions/upload-artifact@v4
+      - name: Create dev release with VSIX
+        uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ steps.tag.outputs.name }}
           name: ${{ steps.tag.outputs.name }}
-          path: '*.vsix'
-          if-no-files-found: error
+          prerelease: true
+          target_commitish: ${{ github.sha }}
+          generate_release_notes: false
+          body: Automated development build from the dev branch.
+          files: '*.vsix'
