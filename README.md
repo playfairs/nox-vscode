@@ -1,4 +1,4 @@
-# Nox Language Support for Visual Studio Code
+# [Nox](https://github.com/playfairs/nox) Language Support for Visual Studio Code
 
 Syntax highlighting and live diagnostics for Nox project and task files.
 
