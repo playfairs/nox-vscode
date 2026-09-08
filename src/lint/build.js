@@ -7,6 +7,7 @@ const projectMembers = new Set([
 ]);
 const targetKinds = new Set([
   "executable",
+  "cxx_executable",
   "d_executable",
   "static_library",
   "static",
@@ -138,6 +139,7 @@ class BuildParser {
     this.errors = errors;
     this.index = 0;
     this.targets = new Map();
+    this.bindings = new Set();
   }
 
   parse() {
@@ -165,6 +167,7 @@ class BuildParser {
       if (member.value === "project")
         this.errorAtPrevious("Projects cannot be nested.");
       else if (targetKinds.has(member.value)) this.parseTarget(member.value);
+      else if (member.value === "let") this.parseBinding();
       else if (projectMembers.has(member.value))
         this.parseProjectProperty(member.value);
       else {
@@ -190,6 +193,21 @@ class BuildParser {
     if (property === "dependencies") this.parseArray("dependency");
     else if (property === "version") this.parseValueOrFile("version");
     else this.takeValue(property);
+  }
+
+  parseBinding() {
+    const name = this.takeValue("binding name");
+    if (!name) return;
+    if (this.bindings.has(name.value))
+      this.errors.push({
+        start: name.start,
+        end: name.end,
+        message: `Duplicate binding \`${name.value}\`.`,
+      });
+    this.expectSymbol("=", `Expected \`=\` after binding ${name.value}.`);
+    if (this.peek()?.value === "[") this.parseArray("binding");
+    else this.takeValue(`value for binding ${name.value}`);
+    this.bindings.add(name.value);
   }
 
   parseTarget(kind) {
@@ -231,7 +249,11 @@ class BuildParser {
         target.dependencies = this.parseArray("dependency");
       else if (property.value === "install") {
         const value = this.takeWord();
-        if (!value || !["true", "false"].includes(value.value))
+        if (
+          !value ||
+          (!['true', 'false'].includes(value.value) &&
+            !this.bindings.has(value.value))
+        )
           this.errors.push({
             start: value?.start || this.currentStart(),
             end: value?.end || this.currentEnd(),
@@ -258,6 +280,10 @@ class BuildParser {
   }
   parseArray(label) {
     const values = [];
+    if (this.peek()?.type === "word" && this.bindings.has(this.peek().value)) {
+      values.push(this.takeWord().value);
+      return values;
+    }
     this.expectSymbol("[", `Expected an array of ${label} values.`);
     while (!this.atEnd() && !this.takeSymbol("]")) {
       const before = this.index;

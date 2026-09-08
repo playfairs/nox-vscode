@@ -57,7 +57,7 @@
       "patterns": [
         {
           "name": "keyword.control.nox",
-          "match": "\\b(project|executable|static_library|static|shared_library|shared|rust_executable|rust_library|task|tasks)\\b"
+          "match": "\\b(project|let|executable|cxx_executable|static_library|static|shared_library|shared|rust_executable|rust_library|d_executable|task|tasks)\\b"
         }
       ]
     },

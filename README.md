@@ -1,6 +1,7 @@
-# [Nox](https://github.com/playfairs/nox) Language Support for Visual Studio Code
+# [Nox](https://github.com/playfairs/nox) v1.1.1 Language Support for Visual Studio Code
 
-Syntax highlighting and live diagnostics for Nox project and task files.
+Syntax highlighting and live diagnostics for Nox project and task files. This
+extension supports Nox versions up to and including `v1.1.1`.
 
 The extension version is defined in `VERSION`. Before packaging locally, synchronize the VS Code manifest:
 
@@ -8,7 +9,7 @@ The extension version is defined in `VERSION`. Before packaging locally, synchro
 npm run package
 ```
 
-The extension lints open `nox.build`, `noxfile`, and `nox.state` documents as you edit them. Syntax errors, malformed arrays, missing braces, unknown project or target properties, duplicate targets/tasks, invalid `install` values, and malformed state entries appear in VS Code's Problems panel with source ranges.
+The extension lints open `nox.build`, `noxfile`, and `nox.state` documents as you edit them. Syntax errors, malformed arrays, missing braces, unknown project or target properties, duplicate targets/tasks/bindings, invalid `install` values, and malformed state entries appear in VS Code's Problems panel with source ranges. The `nox.build` linter recognizes project-level `let` bindings, binding references, and `cxx_executable` targets.
 
 Recognized files:
 
@@ -16,7 +17,7 @@ Recognized files:
 - `noxfile`
 - `nox.state`
 
-The extension highlights Nox project declarations, targets, properties, strings, comments, booleans, numbers, and native expressions such as `file()` and `glob()`.
+The extension highlights Nox project declarations, `let` bindings, targets, properties, strings, comments, booleans, numbers, and native expressions such as `file()` and `glob()`.
 
 The runtime is organized under `src/`: activation lives in `src/extension.js`, document linting in `src/lint/index.js`, and build parsing in `src/lint/build.js`.
 
