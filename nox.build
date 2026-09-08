@@ -2,6 +2,7 @@ project "nox-language-support" {
     version = file("./VERSION")
     description = "Syntax highlighting and live diagnostics for Nox files in Visual Studio Code."
     license = "Unlicense"
+    version_files = ["VERSION"]
 
     executable "nox-language-support" {
         sources = [
