@@ -8,6 +8,10 @@ function activate(context) {
   const diagnostics = vscode.languages.createDiagnosticCollection("nox");
   const lint = (document) => {
     if (document.languageId !== "nox") return;
+    if (isExcluded(document)) {
+      diagnostics.delete(document.uri);
+      return;
+    }
     try {
       diagnostics.set(document.uri, toDiagnostics(document));
     } catch (error) {
@@ -29,6 +33,22 @@ function activate(context) {
     ),
   );
   for (const document of vscode.workspace.textDocuments) lint(document);
+}
+
+function isExcluded(document) {
+  const excludes = vscode.workspace
+    .getConfiguration("nox.lint", document.uri)
+    .get("exclude", []);
+  if (!Array.isArray(excludes)) return false;
+  const workspaceFolder = vscode.workspace.getWorkspaceFolder(document.uri);
+  if (!workspaceFolder) return false;
+  const relativePath = path
+    .relative(workspaceFolder.uri.fsPath, document.uri.fsPath)
+    .split(path.sep)
+    .join("/");
+  return excludes.some(
+    (entry) => typeof entry === "string" && entry.replaceAll("\\", "/") === relativePath,
+  );
 }
 
 function toDiagnostics(document) {

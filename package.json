@@ -2,7 +2,7 @@
   "name": "nox-language-support",
   "displayName": "Nox Language Support",
   "description": "Syntax highlighting for Nox build files and task files.",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "publisher": "playfairs",
   "license": "Unlicense",
   "main": "./src/extension.js",
@@ -24,6 +24,19 @@
     "package": "npm run sync-version && npx --yes @vscode/vsce package --no-dependencies --allow-missing-repository"
   },
   "contributes": {
+    "configuration": {
+      "title": "Nox",
+      "properties": {
+        "nox.lint.exclude": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Workspace-relative nox files to exclude from diagnostics."
+        }
+      }
+    },
     "languages": [
       {
         "id": "nox",
