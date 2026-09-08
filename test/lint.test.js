@@ -3,6 +3,7 @@ const { lintBuild } = require("../src/lint/build");
 
 const source = `project "ripnet" {
   version = file("./VERSION")
+  version_files = ["VERSION", "package.json"]
   d_executable "ripnet" {
     sources = ["src/main.d"]
     install = true

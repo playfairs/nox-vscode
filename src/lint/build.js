@@ -1,5 +1,6 @@
 const projectMembers = new Set([
   "version",
+  "version_files",
   "description",
   "license",
   "edition",
@@ -190,7 +191,8 @@ class BuildParser {
 
   parseProjectProperty(property) {
     this.expectSymbol("=", `Expected \`=\` after ${property}.`);
-    if (property === "dependencies") this.parseArray("dependency");
+    if (property === "dependencies" || property === "version_files")
+      this.parseArray(property === "version_files" ? "version file" : "dependency");
     else if (property === "version") this.parseValueOrFile("version");
     else this.takeValue(property);
   }

@@ -65,7 +65,7 @@
       "patterns": [
         {
           "name": "variable.other.property.nox",
-          "match": "\\b(version|description|license|edition|dependencies|sources|depends|include_dirs|includes|defines|flags|linker_flags|install|run)\\b(?=\\s*(=|:))"
+          "match": "\\b(version|version_files|description|license|edition|dependencies|sources|depends|include_dirs|includes|defines|flags|linker_flags|install|run)\\b(?=\\s*(=|:))"
         }
       ]
     },
