@@ -12,6 +12,21 @@
       "include": "#keywords"
     },
     {
+      "include": "#task-declarations"
+    },
+    {
+      "include": "#task-dependencies"
+    },
+    {
+      "include": "#commands"
+    },
+    {
+      "include": "#interpolation"
+    },
+    {
+      "include": "#command-substitution"
+    },
+    {
       "include": "#properties"
     },
     {
@@ -57,7 +72,74 @@
       "patterns": [
         {
           "name": "keyword.control.nox",
-          "match": "\\b(project|let|executable|cxx_executable|static_library|static|shared_library|shared|rust_executable|rust_library|d_executable|task|tasks)\\b"
+          "match": "\\b(project|let|set|executable|cxx_executable|static_library|static|shared_library|shared|rust_executable|rust_library|d_executable|task|tasks)\\b"
+        }
+      ]
+    },
+    "task-declarations": {
+      "patterns": [
+        {
+          "name": "entity.name.function.task.nox",
+          "match": "^\\s{2,}([A-Za-z_][\\w.-]*)(?=\\s*:\\s*$)"
+        }
+      ]
+    },
+    "task-dependencies": {
+      "patterns": [
+        {
+          "match": "^(\\s*)(@nox)\\s+([A-Za-z_][\\w.-]*)",
+          "captures": {
+            "2": {
+              "name": "keyword.control.task-dependency.nox"
+            },
+            "3": {
+              "name": "entity.name.function.task-reference.nox"
+            }
+          }
+        }
+      ]
+    },
+    "commands": {
+      "patterns": [
+        {
+          "name": "keyword.control.command.nox",
+          "match": "^\\s*(run)(?=\\s*:)"
+        },
+        {
+          "name": "support.function.command.nox",
+          "match": "^\\s*run\\s*:\\s*([A-Za-z_][\\w.-]*)",
+          "captures": {
+            "1": {
+              "name": "support.function.command.nox"
+            }
+          }
+        },
+        {
+          "name": "keyword.operator.assignment.nox",
+          "match": ":=|(?<!:)=(?!=)"
+        }
+      ]
+    },
+    "interpolation": {
+      "patterns": [
+        {
+          "name": "variable.other.interpolation.nox",
+          "match": "\\{\\{[A-Za-z_][\\w.-]*\\}\\}"
+        }
+      ]
+    },
+    "command-substitution": {
+      "patterns": [
+        {
+          "name": "string.interpolated.command.nox",
+          "begin": "`",
+          "end": "`",
+          "patterns": [
+            {
+              "name": "support.function.command.nox",
+              "match": "\\b[A-Za-z_][\\w.-]*\\b"
+            }
+          ]
         }
       ]
     },
