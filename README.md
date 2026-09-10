@@ -1,7 +1,7 @@
-# [Nox](https://github.com/playfairs/nox) v1.1.1 Language Support for Visual Studio Code
+# [Nox](https://github.com/playfairs/nox) v1.1.5 Language Support for Visual Studio Code
 
 Syntax highlighting and live diagnostics for Nox project and task files. This
-extension supports Nox versions up to and including `v1.1.1`.
+extension supports Nox versions up to and including `v1.1.5`.
 
 The extension version is defined in `VERSION`. Before packaging locally, synchronize the VS Code manifest:
 

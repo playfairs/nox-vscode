@@ -1,5 +1,32 @@
 const assert = require("node:assert/strict");
 const { lintBuild } = require("../src/lint/build");
+const { lintNoxfile } = require("../src/lint");
+
+const noxfile = `tasks:
+  build:
+    run: npm test
+  format:
+    run: |
+      npx prettier --write "**/*.{js,json,md}"
+  package:
+    run: >
+      npm run package`;
+
+assert.deepEqual(lintNoxfile(noxfile), []);
+
+const emptyRun = `tasks:
+  build:
+    run:`;
+
+assert.equal(lintNoxfile(emptyRun)[0].message, "Task run command cannot be empty.");
+
+const malformedTask = `tasks:
+  build`;
+
+assert.equal(
+  lintNoxfile(malformedTask)[0].message,
+  "Expected a task name ending with `:`.",
+);
 
 const source = `project "ripnet" {
   version = file("./VERSION")

@@ -10,6 +10,9 @@ function lintDocument(text, filename) {
 function lintNoxfile(text) {
   const errors = [];
   let tasks = false;
+  let tasksIndent = 0;
+  let taskIndent = 0;
+  let runIndent = null;
   const taskNames = new Set();
   text.split(/\r?\n/).forEach((line, lineIndex) => {
     const indentation = line.length - line.trimStart().length;
@@ -17,9 +20,42 @@ function lintNoxfile(text) {
     if (!value || value.startsWith("#")) return;
     if (value === "tasks:") {
       tasks = true;
+      tasksIndent = indentation;
       return;
     }
-    if (tasks && indentation <= 2 && !value.endsWith(":"))
+    if (!tasks) return;
+    if (runIndent !== null) {
+      if (indentation > runIndent) return;
+      runIndent = null;
+    }
+    if (indentation > taskIndent && value.startsWith("run:")) {
+      const command = value.slice(5).trim();
+      if (!command)
+        errors.push(
+          lineError(text, lineIndex, line, "Task run command cannot be empty."),
+        );
+      if (command === "|" || command === ">") runIndent = indentation;
+      return;
+    }
+    if (
+      indentation > tasksIndent &&
+      indentation <= tasksIndent + 4 &&
+      value.endsWith(":")
+    ) {
+      const name = value.slice(0, -1).trim();
+      if (taskNames.has(name))
+        errors.push(
+          lineError(text, lineIndex, line, `Duplicate task \`${name}\`.`),
+        );
+      taskNames.add(name);
+      taskIndent = indentation;
+      return;
+    }
+    if (
+      indentation > tasksIndent &&
+      indentation <= tasksIndent + 4 &&
+      !value.startsWith("@nox")
+    )
       errors.push(
         lineError(
           text,
@@ -28,17 +64,14 @@ function lintNoxfile(text) {
           "Expected a task name ending with `:`.",
         ),
       );
-    if (tasks && indentation > 0 && value.endsWith(":") && indentation <= 4) {
-      const name = value.slice(0, -1).trim();
-      if (taskNames.has(name))
-        errors.push(
-          lineError(text, lineIndex, line, `Duplicate task \`${name}\`.`),
-        );
-      taskNames.add(name);
-    }
-    if (tasks && value.startsWith("run:") && !value.slice(4).trim())
+    if (indentation <= tasksIndent || indentation <= taskIndent)
       errors.push(
-        lineError(text, lineIndex, line, "Task run command cannot be empty."),
+        lineError(
+          text,
+          lineIndex,
+          line,
+          "Expected a task name ending with `:`.",
+        ),
       );
   });
   return errors;
